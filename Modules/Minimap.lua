@@ -94,12 +94,10 @@ button:SetScript("OnClick", function(self, mouseButton)
     if mouseButton == "RightButton" and IsShiftKeyDown() then
         TB.db.settings.minimap.expanded = not TB.db.settings.minimap.expanded
         ApplyExpandedState()
+    elseif mouseButton == "RightButton" then
+        TB:ToggleMarkerBrowser()
     elseif mouseButton == "LeftButton" then
-        if TB.OpenMapInterface then
-            TB:OpenMapInterface()
-        else
-            print("|cff33ff99TrailBeacon|r: the map interface isn't built yet.")
-        end
+        ToggleWorldMap()
     end
 end)
 
@@ -107,6 +105,7 @@ button:SetScript("OnEnter", function(self)
     GameTooltip:SetOwner(self, "ANCHOR_LEFT")
     GameTooltip:SetText("TrailBeacon", 1, 1, 1)
     GameTooltip:AddLine("Left-click to open the marker map.", 0.9, 0.9, 0.9)
+    GameTooltip:AddLine("Right-click to open the marker list.", 0.9, 0.9, 0.9)
     GameTooltip:AddLine("Shift + Right-click to toggle coordinates.", 0.9, 0.9, 0.9)
     GameTooltip:AddLine("Drag to move around the minimap.", 0.9, 0.9, 0.9)
     GameTooltip:Show()
