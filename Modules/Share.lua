@@ -166,17 +166,19 @@ function TB:ExportSelected()
     StaticPopup_Show("TRAILBEACON_EXPORT")
 end
 
-local function ImportNative(text)
+function TB:DecodeExportString(text)
+    if text:sub(1, #EXPORT_PREFIX) ~= EXPORT_PREFIX then
+        return {}
+    end
     local payload = Base64Decode(text:sub(#EXPORT_PREFIX + 1))
-    local imported = 0
+    local markers = {}
     for _, record in ipairs({ strsplit("|", payload) }) do
         local marker = DeserializeMarker(record)
         if marker then
-            TB:AddImportedMarker(marker)
-            imported = imported + 1
+            table.insert(markers, marker)
         end
     end
-    return imported
+    return markers
 end
 
 function TB:ImportString(text)
@@ -186,8 +188,11 @@ function TB:ImportString(text)
     end
 
     if text:sub(1, #EXPORT_PREFIX) == EXPORT_PREFIX then
-        local count = ImportNative(text)
-        print(string.format("|cff33ff99TrailBeacon|r: imported %d marker(s).", count))
+        local markers = TB:DecodeExportString(text)
+        for _, marker in ipairs(markers) do
+            TB:AddImportedMarker(marker)
+        end
+        print(string.format("|cff33ff99TrailBeacon|r: imported %d marker(s).", #markers))
         return
     end
 
