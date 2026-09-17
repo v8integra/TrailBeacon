@@ -60,7 +60,9 @@ function dataProvider:RefreshAllData(fromOnShow)
     local mapID = self:GetMap():GetMapID()
     if not mapID then return end
     for _, marker in ipairs(TB:GetMarkersForMap(mapID)) do
-        self:GetMap():AcquirePin(PIN_TEMPLATE, marker)
+        if TB:IsMarkerVisible(marker) then
+            self:GetMap():AcquirePin(PIN_TEMPLATE, marker)
+        end
     end
 end
 

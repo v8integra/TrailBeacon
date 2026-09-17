@@ -13,3 +13,4 @@ Modules\MapPins.xml
 Modules\MapPins.lua
 Modules\MapToolbar.lua
 Modules\ShareToolbar.lua
+Modules\Filters.lua

@@ -15,7 +15,9 @@ function TB:SelectAllVisibleMarkers()
     if not mapID then return end
     TB.selectedMarkerIDs = TB.selectedMarkerIDs or {}
     for _, marker in ipairs(TB:GetMarkersForMap(mapID)) do
-        TB.selectedMarkerIDs[marker.id] = true
+        if TB:IsMarkerVisible(marker) then
+            TB.selectedMarkerIDs[marker.id] = true
+        end
     end
     TB:RefreshMapPins()
 end
@@ -150,3 +152,10 @@ WorldMapFrame:HookScript("OnHide", function()
 end)
 
 TB.shareToolbar = shareBar
+TB.shareToolbarButtons = {
+    selectAll = selectAllBtn,
+    deselectAll = deselectAllBtn,
+    manualSelect = manualSelectBtn,
+    copy = copyBtn,
+    import = importBtn,
+}
