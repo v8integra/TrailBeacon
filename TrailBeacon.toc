@@ -1,0 +1,9 @@
+## Interface: 120105
+## Title: TrailBeacon
+## Notes: Place, customize, share, and navigate to custom map and minimap markers.
+## Author: Keith Francis
+## Version: 0.1.0
+## SavedVariables: TrailBeaconDB
+
+Core\Core.lua
+Modules\Minimap.lua
