@@ -5,7 +5,6 @@ TB.DEFAULTS = {
     settings = {
         minimap = {
             angle = 215,
-            expanded = false,
         },
         arrow = {
             point = "CENTER",

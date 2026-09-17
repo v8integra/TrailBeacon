@@ -34,9 +34,9 @@ Avoid building anything that could be construed as a "computational addon" (per 
 ### 1. Minimap Button
 - Small icon attached to the outer edge of the minimap.
 - Draggable around the minimap's circumference to any position the player chooses; position persists in SavedVariables.
-- Expandable state: shows live player coordinates as text below the icon.
-- Shift + Right-click toggles between icon-only and icon+coordinates display.
 - Left-click opens the main map marker interface (see below).
+- Right-click opens the marker list/browser panel (see Feature 5).
+- **Removed (2026-09-17)**: the coordinate-display expandable state and its Shift + Right-click toggle. The Forever beta added a native coordinate readout to the bottom of the minimap itself, making TrailBeacon's own copy redundant.
 
 ### 2. Map View — Marker Toolbar (bottom bar)
 - Centered instructional text above the icon row, e.g. "Click an icon, then click on the map to place it."
