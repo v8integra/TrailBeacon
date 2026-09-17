@@ -10,7 +10,7 @@ TB.DEFAULTS = {
             point = "CENTER",
             x = 0,
             y = 0,
-            style = 1,
+            style = "Basic",
             color = { r = 1, g = 1, b = 1 },
             grayscale = false,
         },

@@ -74,6 +74,25 @@ function TB:DeleteMarker(id)
     end
 end
 
+function TB:GetTrackedMarker()
+    for _, marker in ipairs(TB.db.markers) do
+        if marker.tracked then
+            return marker
+        end
+    end
+end
+
+function TB:ToggleTrackedMarker(id)
+    local marker = TB:GetMarkerByID(id)
+    if not marker then return end
+    local wasTracked = marker.tracked
+    for _, m in ipairs(TB.db.markers) do
+        m.tracked = false
+    end
+    marker.tracked = not wasTracked
+    TB:RefreshMapPins()
+end
+
 function TB:GetMarkersForMap(mapID)
     local results = {}
     for _, marker in ipairs(TB.db.markers) do

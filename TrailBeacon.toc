@@ -15,3 +15,5 @@ Modules\MapToolbar.lua
 Modules\ShareToolbar.lua
 Modules\Filters.lua
 Modules\MarkerList.lua
+Modules\TrackingArrow.lua
+Modules\ArrowOptions.lua

@@ -17,10 +17,10 @@ function TrailBeaconPinMixin:RefreshVisuals()
     self.Texture:SetVertexColor(marker.color.r, marker.color.g, marker.color.b)
     local size = marker.size or TB.MARKER_DEFAULT_SIZE
     self:SetSize(size, size)
-    self:RefreshSelectionState()
+    self:RefreshIndicators()
 end
 
-function TrailBeaconPinMixin:RefreshSelectionState()
+function TrailBeaconPinMixin:RefreshIndicators()
     if not self.SelectionGlow then
         local glow = self:CreateTexture(nil, "OVERLAY")
         glow:SetTexture("Interface\\Buttons\\CheckButtonHilight")
@@ -30,6 +30,10 @@ function TrailBeaconPinMixin:RefreshSelectionState()
         self.SelectionGlow = glow
     end
     if TB.selectedMarkerIDs and TB.selectedMarkerIDs[self.marker.id] then
+        self.SelectionGlow:SetVertexColor(1, 1, 1)
+        self.SelectionGlow:Show()
+    elseif self.marker.tracked then
+        self.SelectionGlow:SetVertexColor(1, 0.82, 0)
         self.SelectionGlow:Show()
     else
         self.SelectionGlow:Hide()
@@ -46,6 +50,10 @@ function TrailBeaconPinMixin:OnEnter()
     if self.marker.locked then
         GameTooltip:AddLine("Locked", 0.6, 0.6, 0.6)
     end
+    if self.marker.tracked then
+        GameTooltip:AddLine("Tracked", 1, 0.82, 0)
+    end
+    GameTooltip:AddLine("Shift-click to track/untrack", 0.6, 0.6, 0.6)
     GameTooltip:Show()
 end
 
@@ -150,7 +158,9 @@ end
 
 function TB:OnMarkerPinClicked(marker, mouseButton)
     if mouseButton ~= "LeftButton" then return end
-    if TB.manualSelectActive then
+    if IsShiftKeyDown() then
+        TB:ToggleTrackedMarker(marker.id)
+    elseif TB.manualSelectActive then
         TB:ToggleMarkerSelected(marker.id)
     else
         TB:OpenMarkerContextMenu(marker)
