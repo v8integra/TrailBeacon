@@ -94,11 +94,18 @@ Avoid building anything that could be construed as a "computational addon" (per 
 
 ## Arrow Art / Rendering Notes
 
-- Arrow shapes should be supplied as plain white/light-gray silhouette images (source as PNG, convert to `.tga` or `.blp` for the addon), all pointing "up" by convention.
-- Color customization at runtime via `SetVertexColor(r, g, b)` on the texture — do not create separate pre-colored image assets per color option.
-- Grayscale toggle via `SetDesaturated(true)` — do not create a separate grayscale image asset.
+**Updated 2026-09-17** — final art supplied (7 racial-themed arrow/spear designs plus the addon icon), replacing the original "simple triangular placeholder" assumption below. Source files are the raw exports in `ArrowImages/` (1408x768, fake checkerboard baked into opaque RGB rather than real alpha — see processing notes). Game-ready processed versions live in `Media/Arrows/*.{png,tga}` and `Media/Icon/*.{png,tga}`: real alpha transparency, cropped to content with a small margin, resized to 512px on the long side (256px for the icon) via Lanczos resampling, aspect ratio **preserved rather than padded to square** (the designs are tall and narrow — padding to a square would waste most of the canvas as empty space). WoW does not clip a rotated texture to its frame's own rectangle, so a non-square texture rotates fine; the tracking arrow code should size the frame to the art's native aspect ratio rather than forcing a square `SetSize`.
+
+- All 7 arrows point "up" (tip/head at top) by convention, confirmed in the final art.
+- These are full-color painted/shaded designs, **not** flat silhouettes — the original plan below (tint via `SetVertexColor`) will muddy/discolor detailed art since it multiplies the texture's existing colors. Revisit the Arrow Options "Color/tint picker" (Feature 7) once this is built: it may need to apply only to a subset of styles, or work as an overlay/glow tint rather than a full multiply.
+- Grayscale toggle via `SetDesaturated(true)` still works on any of these regardless of color — no change needed there.
 - Rotation via `SetRotation(angle)` on the single texture — do not pre-render directional frames.
-- Marker icon art and arrow style art are both placeholder/TBD as of this spec — project owner will supply final images separately. Build the system to accept arbitrary texture files per style/type rather than hardcoding a fixed small set.
+- Known open issue: `Media/Icon/TrailBeaconIcon.png` has a localized artifact — the lantern's light-bloom glow was composited over the fake checkerboard background in the source export, so a halo of checkerboard survives background removal around the lantern (visible as a faint grid patch). Needs either a source re-export with real alpha, or a decision on whether that glow halo was intentional art to begin with.
+
+Original placeholder-era notes (superseded above, kept for context):
+- Arrow shapes were assumed to be plain white/light-gray silhouette images, source as PNG, convert to `.tga`/`.blp` for the addon.
+- Color customization at runtime via `SetVertexColor(r, g, b)` — assumed flat silhouettes; see caveat above.
+- Marker icon art and arrow style art were placeholder/TBD as of the original spec. Build the system to accept arbitrary texture files per style/type rather than hardcoding a fixed small set (still true — now 7 arrow styles instead of a hypothetical "simple triangle").
 
 ## SavedVariables Schema (draft — refine as needed during implementation)
 

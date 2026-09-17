@@ -18,7 +18,13 @@ Note: the spec's SavedVariables draft didn't define a marker `name` field, only 
 
 **Untested in-game** — the map toolbar and pin rendering use WoW's modern map canvas API (`MapCanvasDataProviderMixin`, custom pin templates, `EasyMenu` context menus). This environment can't launch the WoW client, so this code hasn't been verified against the actual Forever beta build yet. Load it in-game and report any Lua errors so they can be fixed.
 
-Marker icon art and arrow style art are placeholders (stock Blizzard textures) until final art is supplied.
+Marker icon art is still placeholder (stock Blizzard textures). Final arrow art has been supplied and processed — see "Art assets" below. This art isn't wired into any code yet (Feature 6/7, the tracking arrow and its options window, aren't built).
+
+## Art assets
+
+- `ArrowImages/` — raw source exports (7 racial-themed arrows + the addon icon) as supplied. Kept as-is, unprocessed.
+- `Media/Arrows/*.{png,tga}` — game-ready versions: real alpha transparency (the source files had a fake checkerboard baked into opaque RGB, not true alpha — this was detected and removed), cropped to content, resized to 512px on the long side, native aspect ratio preserved (not padded to a square — see CLAUDE.md's Arrow Art notes for why).
+- `Media/Icon/*.{png,tga}` — same processing for the addon icon, 256px. **Has a known unresolved artifact**: a halo of the fake checkerboard survives around the lantern's glow, because that glow was composited over the background before export. Needs either a source re-export with real alpha or a decision on whether the glow halo was intended art.
 
 ## Installation (development)
 
