@@ -17,6 +17,23 @@ function TrailBeaconPinMixin:RefreshVisuals()
     self.Texture:SetVertexColor(marker.color.r, marker.color.g, marker.color.b)
     local size = marker.size or TB.MARKER_DEFAULT_SIZE
     self:SetSize(size, size)
+    self:RefreshSelectionState()
+end
+
+function TrailBeaconPinMixin:RefreshSelectionState()
+    if not self.SelectionGlow then
+        local glow = self:CreateTexture(nil, "OVERLAY")
+        glow:SetTexture("Interface\\Buttons\\CheckButtonHilight")
+        glow:SetBlendMode("ADD")
+        glow:SetPoint("TOPLEFT", -4, 4)
+        glow:SetPoint("BOTTOMRIGHT", 4, -4)
+        self.SelectionGlow = glow
+    end
+    if TB.selectedMarkerIDs and TB.selectedMarkerIDs[self.marker.id] then
+        self.SelectionGlow:Show()
+    else
+        self.SelectionGlow:Hide()
+    end
 end
 
 function TrailBeaconPinMixin:OnMouseUp(mouseButton)
@@ -130,7 +147,10 @@ function TB:OpenColorPickerForMarker(marker)
 end
 
 function TB:OnMarkerPinClicked(marker, mouseButton)
-    if mouseButton == "LeftButton" then
+    if mouseButton ~= "LeftButton" then return end
+    if TB.manualSelectActive then
+        TB:ToggleMarkerSelected(marker.id)
+    else
         TB:OpenMarkerContextMenu(marker)
     end
 end

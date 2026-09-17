@@ -8,6 +8,8 @@
 Core\Core.lua
 Modules\Minimap.lua
 Modules\Markers.lua
+Modules\Share.lua
 Modules\MapPins.xml
 Modules\MapPins.lua
 Modules\MapToolbar.lua
+Modules\ShareToolbar.lua

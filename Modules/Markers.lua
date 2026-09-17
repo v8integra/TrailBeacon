@@ -48,6 +48,14 @@ function TB:CreateMarker(mapID, x, y, iconType)
     return marker
 end
 
+function TB:AddImportedMarker(data)
+    data.id = GenerateMarkerID()
+    data.tracked = false
+    table.insert(TB.db.markers, data)
+    TB:RefreshMapPins()
+    return data
+end
+
 function TB:GetMarkerByID(id)
     for _, marker in ipairs(TB.db.markers) do
         if marker.id == id then
