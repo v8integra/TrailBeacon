@@ -31,18 +31,26 @@ local UPDATE_INTERVAL = 0.2
 -- GetPlayerFacing() and Texture:SetRotation() are both confirmed (via
 -- warcraft.wiki.gg) to use 0 = north/no-rotation with positive values
 -- increasing counter-clockwise - the same handedness, so no sign flip is
--- needed between them. The bearing below is measured toward west (not
--- east) at +90 degrees specifically to match that convention directly.
--- That fix got the arrow close (down from ~180 degrees off to a small
--- residual, per in-game testing), likely from the remaining unverified
--- assumption: WoW's world-position axis convention itself (+X = south,
--- +Y = west, per C_Map.GetWorldPosFromMapPos). Rather than rework that
--- guess further, calibrated the residual directly from reported error:
--- +15 degrees, then dialed back 4 (net +11) after a second round of
--- testing found it had overshot by ~3-5 degrees clockwise. If it drifts
--- further, adjust this value directly rather than the bearing math above.
+-- needed between them.
+--
+-- The remaining piece - WoW's world-position axis convention - was wrong,
+-- not just imprecise: assumed +X = south, +Y = west (an old "instance
+-- coordinate" convention), patched with a constant ROTATION_OFFSET across
+-- two rounds of testing (11-15 degrees). That never fully converged because
+-- the real error wasn't a constant rotation - a wrong axis mapping produces
+-- an error that varies by bearing/facing geometry, small at some angles and
+-- large (~90 degrees, per a "standing still facing directly at the target"
+-- test) at others, which is exactly the inconsistent behavior seen.
+--
+-- Reverse-engineered the correct convention from HereBeDragons
+-- (github.com/Nevcairiel/HereBeDragons), a widely-used open-source library
+-- many navigation addons rely on for this exact calculation: its
+-- GetWorldVector uses atan2(-deltaX, deltaY) as the raw bearing before
+-- converting to a clockwise compass value, which only produces a correct
+-- compass bearing if +Y = north and +X = east directly (a plain, standard
+-- map convention) - not the south/west assumption used here before.
 local ROTATION_SIGN = 1
-local ROTATION_OFFSET = math.rad(11)
+local ROTATION_OFFSET = 0
 
 local arrow = CreateFrame("Button", "TrailBeaconTrackingArrow", UIParent, "BackdropTemplate")
 arrow:SetMovable(true)
@@ -153,8 +161,8 @@ local function UpdateArrow()
     local dy = markerWorldPos.y - playerWorldPos.y
     local distance = math.sqrt(dx * dx + dy * dy)
 
-    local northComponent = -dx
-    local westComponent = dy
+    local northComponent = dy
+    local westComponent = -dx
     local bearing = math.atan2(westComponent, northComponent)
     local facing = GetPlayerFacing() or 0
     local relative = ROTATION_SIGN * (bearing - facing) + ROTATION_OFFSET
