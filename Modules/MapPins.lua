@@ -15,6 +15,17 @@ local PIN_TEMPLATE = "TrailBeaconMarkerPinTemplate"
 -- mouse-up that lands back inside the pin) and OnMouseEnter/OnMouseLeave.
 TrailBeaconPinMixin = CreateFromMixins(MapCanvasPinMixin)
 
+-- MAP_CANVAS_PIN_FRAME_LEVEL_DEFAULT (2000, in MapCanvas_PinFrameLevelsManager.lua)
+-- is a fixed baseline that other map content (explored-terrain detail layers,
+-- other data providers) can register frame levels above. Without setting one
+-- ourselves, markers were getting visually covered in explored areas.
+-- PIN_FRAME_LEVEL_TOPMOST is a reserved keyword that always resolves to
+-- whatever is currently the highest-registered level, guaranteeing markers
+-- render above everything else regardless of what else is on the map.
+function TrailBeaconPinMixin:OnLoad()
+    self:UseFrameLevelType("PIN_FRAME_LEVEL_TOPMOST")
+end
+
 function TrailBeaconPinMixin:OnAcquired(marker)
     self.marker = marker
     self:RefreshVisuals()
@@ -73,6 +84,17 @@ function TrailBeaconPinMixin:OnMouseLeave()
 end
 
 local dataProvider = CreateFromMixins(MapCanvasDataProviderMixin)
+
+-- RemoveAllData is a no-op stub on the base mixin (see
+-- MapCanvas_DataProviderBase.lua) - consumers are expected to override it.
+-- Without this, old pins were never released back to the pool: every
+-- RefreshAllData (map change, select/deselect, filter toggle, etc.) just
+-- acquired *more* pins on top of the stale ones, which is why markers
+-- appeared to "follow" between different maps and why clicks/selection
+-- looked unresponsive (landing on the wrong stacked duplicate).
+function dataProvider:RemoveAllData()
+    self:GetMap():RemoveAllPinsByTemplate(PIN_TEMPLATE)
+end
 
 function dataProvider:RefreshAllData(fromOnShow)
     self:RemoveAllData()
