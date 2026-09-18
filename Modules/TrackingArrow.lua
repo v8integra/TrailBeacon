@@ -33,22 +33,19 @@ local UPDATE_INTERVAL = 0.2
 -- increasing counter-clockwise - the same handedness, so no sign flip is
 -- needed between them.
 --
--- The remaining piece - WoW's world-position axis convention - was wrong,
--- not just imprecise: assumed +X = south, +Y = west (an old "instance
--- coordinate" convention), patched with a constant ROTATION_OFFSET across
--- two rounds of testing (11-15 degrees). That never fully converged because
--- the real error wasn't a constant rotation - a wrong axis mapping produces
--- an error that varies by bearing/facing geometry, small at some angles and
--- large (~90 degrees, per a "standing still facing directly at the target"
--- test) at others, which is exactly the inconsistent behavior seen.
+-- The remaining piece - WoW's world-position axis convention - went through
+-- two wrong guesses (a "south/west" legacy convention, then an "east/north"
+-- one reverse-engineered from HereBeDragons, which turned out to apply its
+-- own internal coordinate normalization before the formula copied from it -
+-- so its raw deltas weren't the same shape as the raw deltas here).
 --
--- Reverse-engineered the correct convention from HereBeDragons
--- (github.com/Nevcairiel/HereBeDragons), a widely-used open-source library
--- many navigation addons rely on for this exact calculation: its
--- GetWorldVector uses atan2(-deltaX, deltaY) as the raw bearing before
--- converting to a clockwise compass value, which only produces a correct
--- compass bearing if +Y = north and +X = east directly (a plain, standard
--- map convention) - not the south/west assumption used here before.
+-- Solved directly instead from an in-game debug capture (dx, dy, and
+-- GetPlayerFacing() while standing still facing straight at a tracked
+-- marker, so true bearing = facing): bearing = atan2(dy, dx), with NO axis
+-- relabeling or sign flips at all, matched the captured facing value to
+-- within ~11 degrees - small enough to plausibly be aiming imprecision in
+-- that manual test rather than a remaining formula error, versus the
+-- ~90-100 degree errors both earlier guesses produced.
 local ROTATION_SIGN = 1
 local ROTATION_OFFSET = 0
 
@@ -161,15 +158,12 @@ local function UpdateArrow()
     local dy = markerWorldPos.y - playerWorldPos.y
     local distance = math.sqrt(dx * dx + dy * dy)
 
-    local northComponent = dy
-    local westComponent = -dx
-    local bearing = math.atan2(westComponent, northComponent)
+    local bearing = math.atan2(dy, dx)
     local facing = GetPlayerFacing() or 0
     local relative = ROTATION_SIGN * (bearing - facing) + ROTATION_OFFSET
 
-    -- Temporary diagnostic: two rounds of derivation both disagreed with
-    -- in-game testing, so capturing exact numbers instead of continuing to
-    -- guess. Read with: /run local d=TB.debugArrow print(d.dx,d.dy,d.bearingDeg,d.facingDeg,d.relativeDeg)
+    -- Temporary diagnostic, kept for one more round in case a small residual
+    -- remains. Read with: /run local d=TrailBeacon.debugArrow print(d.dx,d.dy,d.bearingDeg,d.facingDeg,d.relativeDeg)
     TB.debugArrow = {
         dx = dx,
         dy = dy,
