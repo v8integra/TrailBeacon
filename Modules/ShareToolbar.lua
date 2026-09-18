@@ -32,10 +32,19 @@ StaticPopupDialogs["TRAILBEACON_EXPORT"] = {
     button1 = CLOSE,
     hasEditBox = true,
     editBoxWidth = 350,
-    OnShow = function(self)
-        self.editBox:SetText(TB.pendingExportString or "")
-        self.editBox:HighlightText()
-        self.editBox:SetFocus()
+    -- This build exposes the dialog's edit box through dialog:GetEditBox()
+    -- (the field is EditBox, not the older lowercase editBox).
+    --
+    -- The popup edit boxes are shared between dialogs, and GameDialog only
+    -- calls SetMaxLetters when a dialog specifies maxLetters - 22 Blizzard
+    -- dialogs set one (24, 31, ...) and nothing resets it. Without this, an
+    -- earlier dialog's limit could silently truncate the export string.
+    OnShow = function(dialog)
+        local editBox = dialog:GetEditBox()
+        editBox:SetMaxLetters(0)
+        editBox:SetText(TB.pendingExportString or "")
+        editBox:HighlightText()
+        editBox:SetFocus()
     end,
     EditBoxOnEscapePressed = function(self)
         self:GetParent():Hide()
@@ -52,13 +61,15 @@ StaticPopupDialogs["TRAILBEACON_IMPORT"] = {
     button2 = CANCEL,
     hasEditBox = true,
     editBoxWidth = 350,
-    OnAccept = function(self)
-        TB:ImportString(self.editBox:GetText())
+    OnShow = function(dialog)
+        dialog:GetEditBox():SetMaxLetters(0)
     end,
-    EditBoxOnEnterPressed = function(self)
-        local parent = self:GetParent()
-        TB:ImportString(parent.editBox:GetText())
-        parent:Hide()
+    OnAccept = function(dialog)
+        TB:ImportString(dialog:GetEditBoxText())
+    end,
+    EditBoxOnEnterPressed = function(editBox)
+        TB:ImportString(editBox:GetText())
+        editBox:GetParent():Hide()
     end,
     EditBoxOnEscapePressed = function(self)
         self:GetParent():Hide()
