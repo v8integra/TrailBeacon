@@ -2,7 +2,11 @@ local ADDON_NAME, TB = ...
 
 local PIN_TEMPLATE = "TrailBeaconMarkerPinTemplate"
 
-TrailBeaconPinMixin = {}
+-- Built from MapCanvasPinMixin (SetPosition and the rest of the pin/canvas
+-- integration) rather than inheriting an XML base template by name, since
+-- that name couldn't be resolved reliably. This global table must exist
+-- before Modules/MapPins.xml is parsed - see the TOC load order.
+TrailBeaconPinMixin = CreateFromMixins(MapCanvasPinMixin)
 
 function TrailBeaconPinMixin:OnAcquired(marker)
     self.marker = marker
