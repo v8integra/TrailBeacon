@@ -69,10 +69,11 @@ StaticPopupDialogs["TRAILBEACON_IMPORT"] = {
     preferredIndex = 3,
 }
 
-local shareBar = CreateFrame("Frame", "TrailBeaconShareToolbar", WorldMapFrame, "BackdropTemplate")
+local shareBar = CreateFrame("Frame", "TrailBeaconShareToolbar", WorldMapFrame.ScrollContainer, "BackdropTemplate")
 shareBar:SetHeight(32)
-shareBar:SetPoint("TOPLEFT", WorldMapFrame, "TOPLEFT", 8, -8)
-shareBar:SetPoint("TOPRIGHT", WorldMapFrame, "TOPRIGHT", -8, -8)
+shareBar:SetFrameStrata("HIGH")
+shareBar:SetPoint("TOPLEFT", WorldMapFrame.ScrollContainer, "TOPLEFT", 8, -8)
+shareBar:SetPoint("TOPRIGHT", WorldMapFrame.ScrollContainer, "TOPRIGHT", -8, -8)
 shareBar:SetBackdrop({
     bgFile = "Interface\\DialogFrame\\UI-DialogBox-Background",
     edgeFile = "Interface\\Tooltips\\UI-Tooltip-Border",

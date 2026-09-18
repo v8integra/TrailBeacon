@@ -1,15 +1,10 @@
 <Ui xmlns="http://www.blizzard.com/wow/ui/">
-    <Frame name="TrailBeaconMarkerPinTemplate" mixin="TrailBeaconPinMixin" virtual="true">
+    <Frame name="TrailBeaconMarkerPinTemplate" mixin="TrailBeaconPinMixin" enableMouseMotion="true" enableMouseClicks="true" virtual="true">
         <Size x="16" y="16"/>
         <Layers>
             <Layer level="ARTWORK">
                 <Texture parentKey="Texture" setAllPoints="true"/>
             </Layer>
         </Layers>
-        <Scripts>
-            <OnMouseUp method="OnMouseUp"/>
-            <OnEnter method="OnEnter"/>
-            <OnLeave method="OnLeave"/>
-        </Scripts>
     </Frame>
 </Ui>

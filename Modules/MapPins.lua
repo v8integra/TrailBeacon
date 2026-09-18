@@ -6,6 +6,13 @@ local PIN_TEMPLATE = "TrailBeaconMarkerPinTemplate"
 -- integration) rather than inheriting an XML base template by name, since
 -- that name couldn't be resolved reliably. This global table must exist
 -- before Modules/MapPins.xml is parsed - see the TOC load order.
+--
+-- AcquirePin wires up OnMouseUp/OnEnter/OnLeave scripts itself (see
+-- MapCanvas_DataProviderBase.lua) whenever the XML template has
+-- enableMouseClicks/enableMouseMotion set - it asserts those script slots
+-- are still empty before claiming them, so this mixin must NOT hook them
+-- via XML <Scripts>. The actual override points are OnClick (called on a
+-- mouse-up that lands back inside the pin) and OnMouseEnter/OnMouseLeave.
 TrailBeaconPinMixin = CreateFromMixins(MapCanvasPinMixin)
 
 function TrailBeaconPinMixin:OnAcquired(marker)
@@ -44,11 +51,11 @@ function TrailBeaconPinMixin:RefreshIndicators()
     end
 end
 
-function TrailBeaconPinMixin:OnMouseUp(mouseButton)
+function TrailBeaconPinMixin:OnClick(mouseButton)
     TB:OnMarkerPinClicked(self.marker, mouseButton)
 end
 
-function TrailBeaconPinMixin:OnEnter()
+function TrailBeaconPinMixin:OnMouseEnter()
     GameTooltip:SetOwner(self, "ANCHOR_RIGHT")
     GameTooltip:SetText(TB:GetMarkerDisplayName(self.marker), 1, 1, 1)
     if self.marker.locked then
@@ -61,7 +68,7 @@ function TrailBeaconPinMixin:OnEnter()
     GameTooltip:Show()
 end
 
-function TrailBeaconPinMixin:OnLeave()
+function TrailBeaconPinMixin:OnMouseLeave()
     GameTooltip:Hide()
 end
 

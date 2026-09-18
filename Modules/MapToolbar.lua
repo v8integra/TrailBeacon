@@ -3,10 +3,11 @@ local ADDON_NAME, TB = ...
 local ICON_BUTTON_SIZE = 28
 local BUTTON_SPACING = 6
 
-local toolbar = CreateFrame("Frame", "TrailBeaconMapToolbar", WorldMapFrame, "BackdropTemplate")
+local toolbar = CreateFrame("Frame", "TrailBeaconMapToolbar", WorldMapFrame.ScrollContainer, "BackdropTemplate")
 toolbar:SetHeight(56)
-toolbar:SetPoint("BOTTOMLEFT", WorldMapFrame, "BOTTOMLEFT", 8, 8)
-toolbar:SetPoint("BOTTOMRIGHT", WorldMapFrame, "BOTTOMRIGHT", -8, 8)
+toolbar:SetFrameStrata("HIGH")
+toolbar:SetPoint("BOTTOMLEFT", WorldMapFrame.ScrollContainer, "BOTTOMLEFT", 8, 8)
+toolbar:SetPoint("BOTTOMRIGHT", WorldMapFrame.ScrollContainer, "BOTTOMRIGHT", -8, 8)
 toolbar:SetBackdrop({
     bgFile = "Interface\\DialogFrame\\UI-DialogBox-Background",
     edgeFile = "Interface\\Tooltips\\UI-Tooltip-Border",
