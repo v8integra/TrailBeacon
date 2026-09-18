@@ -63,7 +63,7 @@ function TrailBeaconPinMixin:RefreshIndicators()
 end
 
 function TrailBeaconPinMixin:OnClick(mouseButton)
-    TB:OnMarkerPinClicked(self.marker, mouseButton)
+    TB:OnMarkerPinClicked(self.marker, mouseButton, self)
 end
 
 function TrailBeaconPinMixin:OnMouseEnter()
@@ -116,56 +116,34 @@ function TB:RefreshMapPins()
     end
 end
 
-local contextMenuFrame = CreateFrame("Frame", "TrailBeaconMarkerContextMenu", UIParent, "UIDropDownMenuTemplate")
+-- EasyMenu/UIDropDownMenu don't exist in this build - Blizzard_Menu's
+-- MenuUtil is the current API (verified against MenuUtil.lua). CreateButton
+-- returns the new button's element description, which is what SetEnabled
+-- needs to be chained onto for the locked-marker disabled state.
+function TB:OpenMarkerContextMenu(marker, ownerRegion)
+    MenuUtil.CreateContextMenu(ownerRegion, function(owner, rootDescription)
+        rootDescription:CreateButton("Increase Size", function()
+            marker.size = math.min((marker.size or TB.MARKER_DEFAULT_SIZE) + 2, TB.MARKER_MAX_SIZE)
+            TB:RefreshMapPins()
+        end):SetEnabled(not marker.locked)
 
-local function BuildContextMenu(marker)
-    return {
-        {
-            text = "Increase Size",
-            notCheckable = true,
-            disabled = marker.locked,
-            func = function()
-                marker.size = math.min((marker.size or TB.MARKER_DEFAULT_SIZE) + 2, TB.MARKER_MAX_SIZE)
-                TB:RefreshMapPins()
-            end,
-        },
-        {
-            text = "Decrease Size",
-            notCheckable = true,
-            disabled = marker.locked,
-            func = function()
-                marker.size = math.max((marker.size or TB.MARKER_DEFAULT_SIZE) - 2, TB.MARKER_MIN_SIZE)
-                TB:RefreshMapPins()
-            end,
-        },
-        {
-            text = "Change Color",
-            notCheckable = true,
-            disabled = marker.locked,
-            func = function()
-                TB:OpenColorPickerForMarker(marker)
-            end,
-        },
-        {
-            text = marker.locked and "Unlock" or "Lock",
-            notCheckable = true,
-            func = function()
-                marker.locked = not marker.locked
-            end,
-        },
-        {
-            text = "Delete",
-            notCheckable = true,
-            disabled = marker.locked,
-            func = function()
-                TB:DeleteMarker(marker.id)
-            end,
-        },
-    }
-end
+        rootDescription:CreateButton("Decrease Size", function()
+            marker.size = math.max((marker.size or TB.MARKER_DEFAULT_SIZE) - 2, TB.MARKER_MIN_SIZE)
+            TB:RefreshMapPins()
+        end):SetEnabled(not marker.locked)
 
-function TB:OpenMarkerContextMenu(marker)
-    EasyMenu(BuildContextMenu(marker), contextMenuFrame, "cursor", 0, 0, "MENU")
+        rootDescription:CreateButton("Change Color", function()
+            TB:OpenColorPickerForMarker(marker)
+        end):SetEnabled(not marker.locked)
+
+        rootDescription:CreateButton(marker.locked and "Unlock" or "Lock", function()
+            marker.locked = not marker.locked
+        end)
+
+        rootDescription:CreateButton("Delete", function()
+            TB:DeleteMarker(marker.id)
+        end):SetEnabled(not marker.locked)
+    end)
 end
 
 function TB:OpenColorPickerForMarker(marker)
@@ -189,13 +167,13 @@ function TB:OpenColorPickerForMarker(marker)
     })
 end
 
-function TB:OnMarkerPinClicked(marker, mouseButton)
+function TB:OnMarkerPinClicked(marker, mouseButton, pin)
     if mouseButton ~= "LeftButton" then return end
     if IsShiftKeyDown() then
         TB:ToggleTrackedMarker(marker.id)
     elseif TB.manualSelectActive then
         TB:ToggleMarkerSelected(marker.id)
     else
-        TB:OpenMarkerContextMenu(marker)
+        TB:OpenMarkerContextMenu(marker, pin)
     end
 end

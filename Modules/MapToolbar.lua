@@ -80,7 +80,14 @@ toolbar:SetScript("OnHide", function()
 end)
 
 WorldMapFrame.ScrollContainer:HookScript("OnMouseUp", function(_, mouseButton)
-    if mouseButton ~= "LeftButton" or not armedIconType then return end
+    if not armedIconType then return end
+
+    if mouseButton == "RightButton" then
+        SetArmedIconType(nil)
+        return
+    end
+
+    if mouseButton ~= "LeftButton" then return end
     local mapID = WorldMapFrame:GetMapID()
     if not mapID then return end
     local x, y = WorldMapFrame:GetNormalizedCursorPosition()
