@@ -70,10 +70,10 @@ StaticPopupDialogs["TRAILBEACON_IMPORT"] = {
 }
 
 local shareBar = CreateFrame("Frame", "TrailBeaconShareToolbar", WorldMapFrame.ScrollContainer, "BackdropTemplate")
-shareBar:SetHeight(32)
+shareBar:SetHeight(28)
 shareBar:SetFrameStrata("HIGH")
-shareBar:SetPoint("TOPLEFT", WorldMapFrame.ScrollContainer, "TOPLEFT", 8, -8)
-shareBar:SetPoint("TOPRIGHT", WorldMapFrame.ScrollContainer, "TOPRIGHT", -8, -8)
+shareBar:SetPoint("TOPLEFT", WorldMapFrame.ScrollContainer, "TOPLEFT", 70, -8)
+shareBar:SetPoint("TOPRIGHT", WorldMapFrame.ScrollContainer, "TOPRIGHT", -70, -8)
 shareBar:SetBackdrop({
     bgFile = "Interface\\DialogFrame\\UI-DialogBox-Background",
     edgeFile = "Interface\\Tooltips\\UI-Tooltip-Border",
@@ -108,14 +108,12 @@ local function SetManualSelectActive(active)
     TB.manualSelectActive = active
     if active then
         manualSelectBtn:LockHighlight()
-        manualSelectBtn:SetText("Manual Select: On")
     else
         manualSelectBtn:UnlockHighlight()
-        manualSelectBtn:SetText("Manual Select")
     end
 end
 
-manualSelectBtn = CreateBarButton("Manual Select", 110)
+manualSelectBtn = CreateBarButton("Manual Select", 95)
 manualSelectBtn:SetPoint("LEFT", deselectAllBtn, "RIGHT", 4, 0)
 manualSelectBtn:SetScript("OnClick", function()
     SetManualSelectActive(not TB.manualSelectActive)

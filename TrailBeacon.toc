@@ -4,6 +4,7 @@
 ## Author: Keith Francis
 ## Version: 0.1.0
 ## SavedVariables: TrailBeaconDB
+## IconTexture: Interface\AddOns\TrailBeacon\Media\Icon\TrailBeaconIcon.tga
 
 Core\Core.lua
 Modules\Minimap.lua
