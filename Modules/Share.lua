@@ -134,11 +134,11 @@ local function ParseWayLine(text)
         mapID = mapID,
         x = tonumber(x) / 100,
         y = tonumber(y) / 100,
-        iconType = "custom",
+        iconType = "marker",
         size = TB.MARKER_DEFAULT_SIZE,
         color = { r = 1, g = 1, b = 1 },
         locked = false,
-        category = { custom = true },
+        category = { marker = true },
     }
 end
 

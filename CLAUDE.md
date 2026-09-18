@@ -57,7 +57,7 @@ Avoid building anything that could be construed as a "computational addon" (per 
 - **Auto-share toggle** (optional setting, off by default) — when enabled, newly placed markers are automatically broadcast to the player's current party/group in real time, similar to how "Map Pin - Auto Party Share" works. This is separate from the manual Copy/Import flow.
 
 ### 4. Marker Categories & Filtering
-- Each marker can be tagged with a category (e.g., Herb, Ore, Quest, Custom — category list should be easy to extend).
+- Each marker can be tagged with a category (category list should be easy to extend). **Finalized 2026-09-17**: Herb, Ore, Quest, Danger, Trash Mob (raid/dungeon filler mobs between bosses), Heal, Food, Cooking, Home, Marker (general-purpose, no specific use) — final icon art in `Media/Icons/`, mapped in `Modules/Markers.lua`'s `TB.ICON_TYPES`. Replaces the original placeholder set (Herb, Ore, Quest, Custom).
 - Filter UI allows **multi-select**: any combination of categories can be shown/hidden simultaneously (e.g., a player can show Herb + Ore at once, not just one category at a time). This is a deliberate requirement — do not implement as a single-select/radio-style filter.
 - Filter selection state persists between sessions via SavedVariables.
 

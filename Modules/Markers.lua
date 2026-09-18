@@ -1,10 +1,16 @@
 local ADDON_NAME, TB = ...
 
 TB.ICON_TYPES = {
-    { key = "herb", icon = "Interface\\Icons\\INV_Misc_Herb_02", label = "Herb" },
-    { key = "ore", icon = "Interface\\Icons\\INV_Misc_Ore_02", label = "Ore" },
-    { key = "quest", icon = "Interface\\Icons\\INV_Misc_QuestionMark", label = "Quest" },
-    { key = "custom", icon = "Interface\\Icons\\INV_Misc_Map_02", label = "Custom" },
+    { key = "herb", icon = "Interface\\AddOns\\TrailBeacon\\Media\\Icons\\leaf.tga", label = "Herb" },
+    { key = "ore", icon = "Interface\\AddOns\\TrailBeacon\\Media\\Icons\\pickaxe.tga", label = "Ore" },
+    { key = "quest", icon = "Interface\\AddOns\\TrailBeacon\\Media\\Icons\\star.tga", label = "Quest" },
+    { key = "danger", icon = "Interface\\AddOns\\TrailBeacon\\Media\\Icons\\skull-crossbones.tga", label = "Danger" },
+    { key = "trashmob", icon = "Interface\\AddOns\\TrailBeacon\\Media\\Icons\\trash.tga", label = "Trash Mob" },
+    { key = "heal", icon = "Interface\\AddOns\\TrailBeacon\\Media\\Icons\\bandage-wound.tga", label = "Heal" },
+    { key = "food", icon = "Interface\\AddOns\\TrailBeacon\\Media\\Icons\\hamburger-soda.tga", label = "Food" },
+    { key = "cooking", icon = "Interface\\AddOns\\TrailBeacon\\Media\\Icons\\knife-kitchen.tga", label = "Cooking" },
+    { key = "home", icon = "Interface\\AddOns\\TrailBeacon\\Media\\Icons\\home.tga", label = "Home" },
+    { key = "marker", icon = "Interface\\AddOns\\TrailBeacon\\Media\\Icons\\marker.tga", label = "Marker" },
 }
 
 TB.MARKER_DEFAULT_SIZE = 16
