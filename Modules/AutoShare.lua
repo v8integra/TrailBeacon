@@ -13,12 +13,27 @@ local function GetShareChannel()
     return nil
 end
 
+-- SendAddonMessage returns a SendAddonMessageResult (Success = 0), per
+-- ChatConstantsDocumentation.lua. Without checking it, a failed share looked
+-- identical to a successful one from the sender's side.
+local SEND_SUCCESS = 0
+local SEND_FAILURE_REASONS = {
+    [3] = "sending too fast, try again in a moment",
+    [5] = "you're not in a group that supports this",
+    [8] = "sending too fast, try again in a moment",
+    [11] = "addon messaging is locked down right now (combat or an instance)",
+}
+
 function TB:BroadcastMarker(marker)
     if not TB.db.settings.autoShare then return end
     local channel = GetShareChannel()
     if not channel then return end
     local payload = TB:ExportMarkers({ marker })
-    C_ChatInfo.SendAddonMessage(ADDON_PREFIX, payload, channel)
+    local result = C_ChatInfo.SendAddonMessage(ADDON_PREFIX, payload, channel)
+    if type(result) == "number" and result ~= SEND_SUCCESS then
+        local reason = SEND_FAILURE_REASONS[result] or ("error code " .. result)
+        print("|cff33ff99TrailBeacon|r: couldn't share that marker with your group (" .. reason .. ").")
+    end
 end
 
 local eventFrame = CreateFrame("Frame")
