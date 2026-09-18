@@ -55,7 +55,7 @@ local function RefreshPreview()
     local style = TB:GetArrowStyleInfo(TB.db.settings.arrow.style)
     local color = TB.db.settings.arrow.color
     previewTexture:SetTexture(style.file)
-    previewTexture:SetSize(PREVIEW_SIZE * style.aspect, PREVIEW_SIZE)
+    previewTexture:SetSize(PREVIEW_SIZE, PREVIEW_SIZE)
     previewTexture:SetVertexColor(color.r, color.g, color.b)
     previewTexture:SetDesaturated(TB.db.settings.arrow.grayscale)
 
@@ -75,7 +75,7 @@ for index, style in ipairs(TB.ARROW_STYLES) do
 
     local tex = btn:CreateTexture(nil, "ARTWORK")
     tex:SetPoint("CENTER")
-    tex:SetSize(THUMB_SIZE * style.aspect, THUMB_SIZE)
+    tex:SetSize(THUMB_SIZE, THUMB_SIZE)
     tex:SetTexture(style.file)
 
     local highlight = btn:CreateTexture(nil, "OVERLAY")

@@ -1,16 +1,15 @@
 local ADDON_NAME, TB = ...
 
--- Aspect ratios (width/height) captured from the current Media/Arrows/*.tga
--- files. If that art is reprocessed at different proportions, update these
--- to match, or the arrow/preview/thumbnails will render slightly stretched.
+-- Media/Arrows/*.tga are square (content centered, transparent-padded to
+-- match width/height), so no aspect ratio bookkeeping is needed here.
 TB.ARROW_STYLES = {
-    { key = "Basic", label = "Basic", file = "Interface\\AddOns\\TrailBeacon\\Media\\Arrows\\BasicArrow.tga", aspect = 290 / 512 },
-    { key = "Dwarf", label = "Dwarf", file = "Interface\\AddOns\\TrailBeacon\\Media\\Arrows\\DwarfArrow.tga", aspect = 140 / 512 },
-    { key = "Elf", label = "Elf", file = "Interface\\AddOns\\TrailBeacon\\Media\\Arrows\\ElfArrow.tga", aspect = 160 / 512 },
-    { key = "Gnome", label = "Gnome", file = "Interface\\AddOns\\TrailBeacon\\Media\\Arrows\\GnomeArrow.tga", aspect = 142 / 512 },
-    { key = "Goblin", label = "Goblin", file = "Interface\\AddOns\\TrailBeacon\\Media\\Arrows\\GoblinArrow.tga", aspect = 222 / 512 },
-    { key = "Orc", label = "Orc", file = "Interface\\AddOns\\TrailBeacon\\Media\\Arrows\\OrcArrow.tga", aspect = 158 / 512 },
-    { key = "Troll", label = "Troll", file = "Interface\\AddOns\\TrailBeacon\\Media\\Arrows\\TrollArrow.tga", aspect = 172 / 512 },
+    { key = "Basic", label = "Basic", file = "Interface\\AddOns\\TrailBeacon\\Media\\Arrows\\BasicArrow.tga" },
+    { key = "Dwarf", label = "Dwarf", file = "Interface\\AddOns\\TrailBeacon\\Media\\Arrows\\DwarfArrow.tga" },
+    { key = "Elf", label = "Elf", file = "Interface\\AddOns\\TrailBeacon\\Media\\Arrows\\ElfArrow.tga" },
+    { key = "Gnome", label = "Gnome", file = "Interface\\AddOns\\TrailBeacon\\Media\\Arrows\\GnomeArrow.tga" },
+    { key = "Goblin", label = "Goblin", file = "Interface\\AddOns\\TrailBeacon\\Media\\Arrows\\GoblinArrow.tga" },
+    { key = "Orc", label = "Orc", file = "Interface\\AddOns\\TrailBeacon\\Media\\Arrows\\OrcArrow.tga" },
+    { key = "Troll", label = "Troll", file = "Interface\\AddOns\\TrailBeacon\\Media\\Arrows\\TrollArrow.tga" },
 }
 
 function TB:GetArrowStyleInfo(key)
@@ -74,7 +73,7 @@ local function ApplyStyle()
     local style = TB:GetArrowStyleInfo(TB.db.settings.arrow.style)
     local color = TB.db.settings.arrow.color
     texture:SetTexture(style.file)
-    texture:SetSize(ARROW_HEIGHT * style.aspect, ARROW_HEIGHT)
+    texture:SetSize(ARROW_HEIGHT, ARROW_HEIGHT)
     texture:SetVertexColor(color.r, color.g, color.b)
     texture:SetDesaturated(TB.db.settings.arrow.grayscale)
 end
