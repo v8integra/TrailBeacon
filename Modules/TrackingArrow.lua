@@ -21,8 +21,17 @@ local ARROW_DEFAULT_SIZE = 48
 local ARROW_MIN_SIZE = 24
 local ARROW_MAX_SIZE = 96
 local ARROW_SIZE_STEP = 8
-local BEZEL_PADDING = 10
 local UPDATE_INTERVAL = 0.2
+
+-- Bezel frame size as a multiple of the arrow size. Measured, not guessed:
+-- Media/Bezel/Bezel.tga's black center is 84% of its width, and the widest
+-- arrow (BasicArrow, whose bottom corners sweep furthest as it rotates)
+-- reaches 1.11x the arrow texture's half-size from center. Fitting that
+-- inside the black disc at every rotation needs at least ~1.32x; 1.4 leaves
+-- a little margin. A fixed pixel padding didn't hold across the 24-96 size
+-- range (too roomy small, too tight large).
+local BEZEL_SCALE = 1.4
+local BEZEL_TEXTURE = "Interface\\AddOns\\TrailBeacon\\Media\\Bezel\\Bezel.tga"
 
 -- GetPlayerFacing() and Texture:SetRotation() are both confirmed (via
 -- warcraft.wiki.gg) to use 0 = north/no-rotation with positive values
@@ -42,22 +51,17 @@ local UPDATE_INTERVAL = 0.2
 local ROTATION_SIGN = 1
 local ROTATION_OFFSET = 0
 
-local arrow = CreateFrame("Button", "TrailBeaconTrackingArrow", UIParent, "BackdropTemplate")
+local arrow = CreateFrame("Button", "TrailBeaconTrackingArrow", UIParent)
 arrow:SetMovable(true)
 arrow:EnableMouse(true)
 arrow:SetClampedToScreen(true)
 arrow:RegisterForDrag("LeftButton")
 arrow:RegisterForClicks("LeftButtonUp", "RightButtonUp")
-arrow:SetBackdrop({
-    bgFile = "Interface\\Tooltips\\UI-Tooltip-Background",
-    edgeFile = "Interface\\Tooltips\\UI-Tooltip-Border",
-    tile = true,
-    tileSize = 16,
-    edgeSize = 12,
-    insets = { left = 3, right = 3, top = 3, bottom = 3 },
-})
-arrow:SetBackdropColor(0, 0, 0, 0.6)
 arrow:Hide()
+
+local bezel = arrow:CreateTexture(nil, "BACKGROUND")
+bezel:SetAllPoints()
+bezel:SetTexture(BEZEL_TEXTURE)
 
 local texture = arrow:CreateTexture(nil, "ARTWORK")
 texture:SetPoint("CENTER")
@@ -94,7 +98,7 @@ local function ApplyStyle()
     texture:SetSize(size, size)
     texture:SetVertexColor(color.r, color.g, color.b)
     texture:SetDesaturated(TB.db.settings.arrow.grayscale)
-    arrow:SetSize(size + BEZEL_PADDING * 2, size + BEZEL_PADDING * 2)
+    arrow:SetSize(size * BEZEL_SCALE, size * BEZEL_SCALE)
 end
 TB.ApplyArrowStyle = ApplyStyle
 
