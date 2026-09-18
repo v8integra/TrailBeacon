@@ -42,10 +42,7 @@ local UPDATE_INTERVAL = 0.2
 -- Solved directly instead from an in-game debug capture (dx, dy, and
 -- GetPlayerFacing() while standing still facing straight at a tracked
 -- marker, so true bearing = facing): bearing = atan2(dy, dx), with NO axis
--- relabeling or sign flips at all, matched the captured facing value to
--- within ~11 degrees - small enough to plausibly be aiming imprecision in
--- that manual test rather than a remaining formula error, versus the
--- ~90-100 degree errors both earlier guesses produced.
+-- relabeling or sign flips at all. Confirmed correct in-game.
 local ROTATION_SIGN = 1
 local ROTATION_OFFSET = 0
 
@@ -161,16 +158,6 @@ local function UpdateArrow()
     local bearing = math.atan2(dy, dx)
     local facing = GetPlayerFacing() or 0
     local relative = ROTATION_SIGN * (bearing - facing) + ROTATION_OFFSET
-
-    -- Temporary diagnostic, kept for one more round in case a small residual
-    -- remains. Read with: /run local d=TrailBeacon.debugArrow print(d.dx,d.dy,d.bearingDeg,d.facingDeg,d.relativeDeg)
-    TB.debugArrow = {
-        dx = dx,
-        dy = dy,
-        bearingDeg = math.deg(bearing),
-        facingDeg = math.deg(facing),
-        relativeDeg = math.deg(relative),
-    }
 
     texture:SetDesaturated(TB.db.settings.arrow.grayscale)
     texture:SetRotation(relative)
