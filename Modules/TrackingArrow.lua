@@ -33,16 +33,16 @@ local UPDATE_INTERVAL = 0.2
 -- increasing counter-clockwise - the same handedness, so no sign flip is
 -- needed between them. The bearing below is measured toward west (not
 -- east) at +90 degrees specifically to match that convention directly.
--- That fix got the arrow close (down from ~180 degrees off to ~10-20
--- degrees off, per in-game testing), with a small residual offset likely
--- from the remaining unverified assumption: WoW's world-position axis
--- convention itself (+X = south, +Y = west, per C_Map.GetWorldPosFromMapPos).
--- Rather than rework that guess further, calibrated the residual directly
--- from the reported error (needed to rotate ~15 degrees more
--- counter-clockwise). If it drifts with further testing, adjust this
--- value directly rather than the bearing math above.
+-- That fix got the arrow close (down from ~180 degrees off to a small
+-- residual, per in-game testing), likely from the remaining unverified
+-- assumption: WoW's world-position axis convention itself (+X = south,
+-- +Y = west, per C_Map.GetWorldPosFromMapPos). Rather than rework that
+-- guess further, calibrated the residual directly from reported error:
+-- +15 degrees, then dialed back 4 (net +11) after a second round of
+-- testing found it had overshot by ~3-5 degrees clockwise. If it drifts
+-- further, adjust this value directly rather than the bearing math above.
 local ROTATION_SIGN = 1
-local ROTATION_OFFSET = math.rad(15)
+local ROTATION_OFFSET = math.rad(11)
 
 local arrow = CreateFrame("Button", "TrailBeaconTrackingArrow", UIParent, "BackdropTemplate")
 arrow:SetMovable(true)
