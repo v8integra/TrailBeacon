@@ -52,11 +52,6 @@ for index, iconInfo in ipairs(TB.ICON_TYPES) do
     icon:SetAllPoints()
     icon:SetTexture(iconInfo.icon)
 
-    local slotBorder = btn:CreateTexture(nil, "OVERLAY")
-    slotBorder:SetPoint("TOPLEFT", -6, 6)
-    slotBorder:SetPoint("BOTTOMRIGHT", 6, -6)
-    slotBorder:SetTexture("Interface\\Buttons\\UI-Quickslot2")
-
     local selected = btn:CreateTexture(nil, "OVERLAY", nil, 1)
     selected:SetAllPoints()
     selected:SetTexture("Interface\\Buttons\\CheckButtonHilight")

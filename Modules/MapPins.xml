@@ -1,5 +1,5 @@
 <Ui xmlns="http://www.blizzard.com/wow/ui/">
-    <Frame name="TrailBeaconMarkerPinTemplate" mixin="TrailBeaconPinMixin" hidden="true">
+    <Frame name="TrailBeaconMarkerPinTemplate" mixin="TrailBeaconPinMixin" virtual="true">
         <Size x="16" y="16"/>
         <Layers>
             <Layer level="ARTWORK">
