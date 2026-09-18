@@ -81,6 +81,15 @@ function TB:DeleteMarker(id)
     end
 end
 
+function TB:DeleteAllMarkersForMap(mapID)
+    for index = #TB.db.markers, 1, -1 do
+        if TB.db.markers[index].mapID == mapID then
+            table.remove(TB.db.markers, index)
+        end
+    end
+    TB:RefreshMapPins()
+end
+
 function TB:GetTrackedMarker()
     for _, marker in ipairs(TB.db.markers) do
         if marker.tracked then

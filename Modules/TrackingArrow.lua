@@ -21,26 +21,40 @@ function TB:GetArrowStyleInfo(key)
     return TB.ARROW_STYLES[1]
 end
 
-local ARROW_HEIGHT = 48
+local ARROW_DEFAULT_SIZE = 48
+local ARROW_MIN_SIZE = 24
+local ARROW_MAX_SIZE = 96
+local ARROW_SIZE_STEP = 8
+local BEZEL_PADDING = 10
 local UPDATE_INTERVAL = 0.2
 
--- WoW's world-position convention (as returned by C_Map.GetWorldPosFromMapPos)
--- has +X = south and +Y = west. GetPlayerFacing() is a compass bearing in
--- radians (0 = north, increasing clockwise toward east). Both of those are
--- best-effort from documentation/convention, not verified against a running
--- client. If the arrow spins the wrong way or sits rotated by a fixed amount
--- once tested in-game, adjust ROTATION_SIGN (flip to -1) and/or
--- ROTATION_OFFSET (radians) below rather than reworking the bearing math.
+-- GetPlayerFacing() and Texture:SetRotation() are both confirmed (via
+-- warcraft.wiki.gg) to use 0 = north/no-rotation with positive values
+-- increasing counter-clockwise - the same handedness, so no sign flip is
+-- needed between them. The bearing below is measured toward west (not
+-- east) at +90 degrees specifically to match that convention directly.
+-- The one remaining unverified assumption is WoW's world-position axis
+-- convention itself (+X = south, +Y = west, per C_Map.GetWorldPosFromMapPos) -
+-- if the arrow is still off after this fix, ROTATION_SIGN/ROTATION_OFFSET
+-- below are the place to correct it rather than reworking this math again.
 local ROTATION_SIGN = 1
 local ROTATION_OFFSET = 0
 
-local arrow = CreateFrame("Button", "TrailBeaconTrackingArrow", UIParent)
-arrow:SetSize(ARROW_HEIGHT, ARROW_HEIGHT)
+local arrow = CreateFrame("Button", "TrailBeaconTrackingArrow", UIParent, "BackdropTemplate")
 arrow:SetMovable(true)
 arrow:EnableMouse(true)
 arrow:SetClampedToScreen(true)
 arrow:RegisterForDrag("LeftButton")
 arrow:RegisterForClicks("LeftButtonUp", "RightButtonUp")
+arrow:SetBackdrop({
+    bgFile = "Interface\\Tooltips\\UI-Tooltip-Background",
+    edgeFile = "Interface\\Tooltips\\UI-Tooltip-Border",
+    tile = true,
+    tileSize = 16,
+    edgeSize = 12,
+    insets = { left = 3, right = 3, top = 3, bottom = 3 },
+})
+arrow:SetBackdropColor(0, 0, 0, 0.6)
 arrow:Hide()
 
 local texture = arrow:CreateTexture(nil, "ARTWORK")
@@ -72,12 +86,24 @@ end)
 local function ApplyStyle()
     local style = TB:GetArrowStyleInfo(TB.db.settings.arrow.style)
     local color = TB.db.settings.arrow.color
+    local size = TB.db.settings.arrow.size or ARROW_DEFAULT_SIZE
     texture:SetTexture(style.file)
-    texture:SetSize(ARROW_HEIGHT, ARROW_HEIGHT)
+    texture:SetSize(size, size)
     texture:SetVertexColor(color.r, color.g, color.b)
     texture:SetDesaturated(TB.db.settings.arrow.grayscale)
+    arrow:SetSize(size + BEZEL_PADDING * 2, size + BEZEL_PADDING * 2)
 end
 TB.ApplyArrowStyle = ApplyStyle
+
+function TB:AdjustArrowSize(delta)
+    local size = Clamp((TB.db.settings.arrow.size or ARROW_DEFAULT_SIZE) + delta, ARROW_MIN_SIZE, ARROW_MAX_SIZE)
+    TB.db.settings.arrow.size = size
+    ApplyStyle()
+end
+
+TB.ARROW_MIN_SIZE = ARROW_MIN_SIZE
+TB.ARROW_MAX_SIZE = ARROW_MAX_SIZE
+TB.ARROW_SIZE_STEP = ARROW_SIZE_STEP
 
 local function UpdateArrow()
     if IsInInstance() then
@@ -124,8 +150,8 @@ local function UpdateArrow()
     local distance = math.sqrt(dx * dx + dy * dy)
 
     local northComponent = -dx
-    local eastComponent = -dy
-    local bearing = math.atan2(eastComponent, northComponent)
+    local westComponent = dy
+    local bearing = math.atan2(westComponent, northComponent)
     local facing = GetPlayerFacing() or 0
     local relative = ROTATION_SIGN * (bearing - facing) + ROTATION_OFFSET
 

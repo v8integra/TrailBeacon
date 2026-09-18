@@ -21,6 +21,30 @@ local instructions = toolbar:CreateFontString(nil, "OVERLAY", "GameFontNormalSma
 instructions:SetPoint("TOP", toolbar, "TOP", 0, -6)
 instructions:SetText("Click an icon, then click on the map to place it.")
 
+StaticPopupDialogs["TRAILBEACON_DELETE_ALL_MARKERS"] = {
+    text = "Delete all markers on this map?",
+    button1 = "Delete All",
+    button2 = CANCEL,
+    OnAccept = function()
+        local mapID = WorldMapFrame:GetMapID()
+        if mapID then
+            TB:DeleteAllMarkersForMap(mapID)
+        end
+    end,
+    timeout = 0,
+    whileDead = true,
+    hideOnEscape = true,
+    preferredIndex = 3,
+}
+
+local deleteAllBtn = CreateFrame("Button", nil, toolbar, "UIPanelButtonTemplate")
+deleteAllBtn:SetSize(90, 20)
+deleteAllBtn:SetText("Delete All")
+deleteAllBtn:SetPoint("RIGHT", toolbar, "RIGHT", -8, 8)
+deleteAllBtn:SetScript("OnClick", function()
+    StaticPopup_Show("TRAILBEACON_DELETE_ALL_MARKERS")
+end)
+
 local totalWidth = (#TB.ICON_TYPES * ICON_BUTTON_SIZE) + ((#TB.ICON_TYPES - 1) * BUTTON_SPACING)
 local row = CreateFrame("Frame", nil, toolbar)
 row:SetSize(totalWidth, ICON_BUTTON_SIZE)
@@ -60,12 +84,22 @@ for index, iconInfo in ipairs(TB.ICON_TYPES) do
     selected:Hide()
     btn.SelectedTexture = selected
 
-    btn:SetScript("OnClick", function()
-        SetArmedIconType(iconInfo.key)
+    btn:RegisterForClicks("LeftButtonUp", "RightButtonUp")
+    btn:SetScript("OnClick", function(_, mouseButton)
+        if mouseButton == "RightButton" then
+            SetArmedIconType(nil)
+        else
+            SetArmedIconType(iconInfo.key)
+        end
     end)
     btn:SetScript("OnEnter", function(self)
         GameTooltip:SetOwner(self, "ANCHOR_TOP")
         GameTooltip:SetText(iconInfo.label)
+        if armedIconType == iconInfo.key then
+            GameTooltip:AddLine("Click to deselect", 0.6, 0.6, 0.6)
+        else
+            GameTooltip:AddLine("Right-click to cancel placement", 0.6, 0.6, 0.6)
+        end
         GameTooltip:Show()
     end)
     btn:SetScript("OnLeave", function()

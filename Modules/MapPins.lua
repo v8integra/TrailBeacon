@@ -63,6 +63,12 @@ function TrailBeaconPinMixin:RefreshIndicators()
 end
 
 function TrailBeaconPinMixin:OnClick(mouseButton)
+    if mouseButton == "RightButton" and IsControlKeyDown() then
+        if not self.marker.locked then
+            TB:DeleteMarker(self.marker.id)
+        end
+        return
+    end
     TB:OnMarkerPinClicked(self.marker, mouseButton, self)
 end
 
@@ -76,6 +82,9 @@ function TrailBeaconPinMixin:OnMouseEnter()
         GameTooltip:AddLine("Tracked", 1, 0.82, 0)
     end
     GameTooltip:AddLine("Shift-click to track/untrack", 0.6, 0.6, 0.6)
+    if not self.marker.locked then
+        GameTooltip:AddLine("Ctrl + Right-click to delete", 0.6, 0.6, 0.6)
+    end
     GameTooltip:Show()
 end
 

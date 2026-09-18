@@ -13,6 +13,7 @@ TB.DEFAULTS = {
             style = "Basic",
             color = { r = 1, g = 1, b = 1 },
             grayscale = false,
+            size = 48,
         },
         filters = {},
         autoShare = false,
