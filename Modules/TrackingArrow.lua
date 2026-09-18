@@ -167,6 +167,17 @@ local function UpdateArrow()
     local facing = GetPlayerFacing() or 0
     local relative = ROTATION_SIGN * (bearing - facing) + ROTATION_OFFSET
 
+    -- Temporary diagnostic: two rounds of derivation both disagreed with
+    -- in-game testing, so capturing exact numbers instead of continuing to
+    -- guess. Read with: /run local d=TB.debugArrow print(d.dx,d.dy,d.bearingDeg,d.facingDeg,d.relativeDeg)
+    TB.debugArrow = {
+        dx = dx,
+        dy = dy,
+        bearingDeg = math.deg(bearing),
+        facingDeg = math.deg(facing),
+        relativeDeg = math.deg(relative),
+    }
+
     texture:SetDesaturated(TB.db.settings.arrow.grayscale)
     texture:SetRotation(relative)
     distanceText:SetFormattedText("%.0f", distance)
