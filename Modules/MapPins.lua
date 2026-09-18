@@ -81,6 +81,11 @@ function TrailBeaconPinMixin:OnMouseEnter()
     if self.marker.tracked then
         GameTooltip:AddLine("Tracked", 1, 0.82, 0)
     end
+    if TB.manualSelectActive then
+        GameTooltip:AddLine("Left-click to select/deselect", 0.6, 0.6, 0.6)
+    else
+        GameTooltip:AddLine("Left-click to open options", 0.6, 0.6, 0.6)
+    end
     GameTooltip:AddLine("Shift-click to track/untrack", 0.6, 0.6, 0.6)
     if not self.marker.locked then
         GameTooltip:AddLine("Middle-click to delete", 0.6, 0.6, 0.6)

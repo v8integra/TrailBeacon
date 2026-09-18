@@ -150,6 +150,11 @@ WorldMapFrame:HookScript("OnHide", function()
     SetManualSelectActive(false)
 end)
 
+-- Also covers the toolbars being collapsed while the map stays open.
+shareBar:HookScript("OnHide", function()
+    SetManualSelectActive(false)
+end)
+
 TB.shareToolbar = shareBar
 TB.shareToolbarButtons = {
     selectAll = selectAllBtn,

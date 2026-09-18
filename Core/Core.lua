@@ -17,6 +17,7 @@ TB.DEFAULTS = {
         },
         filters = {},
         autoShare = false,
+        toolbarsCollapsed = false,
     },
 }
 

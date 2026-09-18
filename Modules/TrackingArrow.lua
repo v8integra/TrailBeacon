@@ -89,6 +89,17 @@ arrow:SetScript("OnClick", function(self, mouseButton)
     end
 end)
 
+arrow:SetScript("OnEnter", function(self)
+    GameTooltip:SetOwner(self, "ANCHOR_TOP")
+    GameTooltip:SetText("Tracking Arrow", 1, 1, 1)
+    GameTooltip:AddLine("Shift + Right-click to open options", 0.6, 0.6, 0.6)
+    GameTooltip:Show()
+end)
+
+arrow:SetScript("OnLeave", function()
+    GameTooltip:Hide()
+end)
+
 local function ApplyStyle()
     local style = TB:GetArrowStyleInfo(TB.db.settings.arrow.style)
     TB.db.settings.arrow.style = style.key
