@@ -53,8 +53,7 @@ row:SetPoint("BOTTOM", toolbar, "BOTTOM", 0, 8)
 local iconButtons = {}
 local armedIconType = nil
 
-local function SetArmedIconType(key)
-    armedIconType = (armedIconType == key) and nil or key
+local function RefreshSelectedTextures()
     for _, entry in ipairs(iconButtons) do
         if entry.key == armedIconType then
             entry.button.SelectedTexture:Show()
@@ -62,6 +61,16 @@ local function SetArmedIconType(key)
             entry.button.SelectedTexture:Hide()
         end
     end
+end
+
+local function ArmIconType(key)
+    armedIconType = key
+    RefreshSelectedTextures()
+end
+
+local function DisarmIconType()
+    armedIconType = nil
+    RefreshSelectedTextures()
 end
 
 function TB:GetArmedIconType()
@@ -87,18 +96,18 @@ for index, iconInfo in ipairs(TB.ICON_TYPES) do
     btn:RegisterForClicks("LeftButtonUp", "RightButtonUp")
     btn:SetScript("OnClick", function(_, mouseButton)
         if mouseButton == "RightButton" then
-            SetArmedIconType(nil)
+            DisarmIconType()
         else
-            SetArmedIconType(iconInfo.key)
+            ArmIconType(iconInfo.key)
         end
     end)
     btn:SetScript("OnEnter", function(self)
         GameTooltip:SetOwner(self, "ANCHOR_TOP")
         GameTooltip:SetText(iconInfo.label)
         if armedIconType == iconInfo.key then
-            GameTooltip:AddLine("Click to deselect", 0.6, 0.6, 0.6)
+            GameTooltip:AddLine("Right-click to deselect icon", 0.6, 0.6, 0.6)
         else
-            GameTooltip:AddLine("Right-click to cancel placement", 0.6, 0.6, 0.6)
+            GameTooltip:AddLine("Click to select", 0.6, 0.6, 0.6)
         end
         GameTooltip:Show()
     end)
@@ -110,14 +119,14 @@ for index, iconInfo in ipairs(TB.ICON_TYPES) do
 end
 
 toolbar:SetScript("OnHide", function()
-    SetArmedIconType(nil)
+    DisarmIconType()
 end)
 
 WorldMapFrame.ScrollContainer:HookScript("OnMouseUp", function(_, mouseButton)
     if not armedIconType then return end
 
     if mouseButton == "RightButton" then
-        SetArmedIconType(nil)
+        DisarmIconType()
         return
     end
 
