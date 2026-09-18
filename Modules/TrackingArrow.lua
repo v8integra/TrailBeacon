@@ -4,12 +4,8 @@ local ADDON_NAME, TB = ...
 -- match width/height), so no aspect ratio bookkeeping is needed here.
 TB.ARROW_STYLES = {
     { key = "Basic", label = "Basic", file = "Interface\\AddOns\\TrailBeacon\\Media\\Arrows\\BasicArrow.tga" },
-    { key = "Dwarf", label = "Dwarf", file = "Interface\\AddOns\\TrailBeacon\\Media\\Arrows\\DwarfArrow.tga" },
-    { key = "Elf", label = "Elf", file = "Interface\\AddOns\\TrailBeacon\\Media\\Arrows\\ElfArrow.tga" },
-    { key = "Gnome", label = "Gnome", file = "Interface\\AddOns\\TrailBeacon\\Media\\Arrows\\GnomeArrow.tga" },
-    { key = "Goblin", label = "Goblin", file = "Interface\\AddOns\\TrailBeacon\\Media\\Arrows\\GoblinArrow.tga" },
-    { key = "Orc", label = "Orc", file = "Interface\\AddOns\\TrailBeacon\\Media\\Arrows\\OrcArrow.tga" },
-    { key = "Troll", label = "Troll", file = "Interface\\AddOns\\TrailBeacon\\Media\\Arrows\\TrollArrow.tga" },
+    { key = "Dragon", label = "Dragon", file = "Interface\\AddOns\\TrailBeacon\\Media\\Arrows\\DragonArrow.tga" },
+    { key = "Gold", label = "Gold", file = "Interface\\AddOns\\TrailBeacon\\Media\\Arrows\\GoldArrow.tga" },
 }
 
 function TB:GetArrowStyleInfo(key)
@@ -91,6 +87,7 @@ end)
 
 local function ApplyStyle()
     local style = TB:GetArrowStyleInfo(TB.db.settings.arrow.style)
+    TB.db.settings.arrow.style = style.key
     local color = TB.db.settings.arrow.color
     local size = TB.db.settings.arrow.size or ARROW_DEFAULT_SIZE
     texture:SetTexture(style.file)
