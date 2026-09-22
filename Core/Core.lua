@@ -16,7 +16,6 @@ TB.DEFAULTS = {
             size = 48,
         },
         filters = {},
-        autoShare = false,
         toolbarsCollapsed = false,
     },
 }

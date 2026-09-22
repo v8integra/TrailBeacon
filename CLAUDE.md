@@ -54,7 +54,7 @@ Avoid building anything that could be construed as a "computational addon" (per 
 - **Manual Select** (toggle) — while active, clicking a marker selects/deselects it for sharing instead of opening the edit context menu from toolbar #2. This mode automatically toggles OFF whenever the map is closed (`OnHide` handler) — never persist manual-select state across map close/reopen.
 - **Copy** — generates a shareable export string from the currently selected markers (serialize marker data → compressed/encoded string, similar in spirit to WeakAuras/ElvUI-style export strings). Display in a copyable edit box.
 - **Import** — accept pasted strings in the TomTom-style `/way` coordinate format (widely used across WowHead, guides, other addons) in addition to TrailBeacon's own native export format. A pasted `/way` string should create a marker with default styling at the given zone/coordinates.
-- **Auto-share toggle** (optional setting, off by default) — when enabled, newly placed markers are automatically broadcast to the player's current party/group in real time, similar to how "Map Pin - Auto Party Share" works. This is separate from the manual Copy/Import flow.
+- **Auto-share toggle** (optional setting, off by default) — when enabled, newly placed markers are automatically broadcast to the player's current party/group in real time, similar to how "Map Pin - Auto Party Share" works. This is separate from the manual Copy/Import flow. **Removed 2026-09-22**: built and functioning (per the offline checks noted in README.md), but untestable without a second player in the same group running the addon, so pulled rather than shipped unverified. Not a scope change — revisit once testing is possible; `Modules/AutoShare.lua` is recoverable from git history (removed cleanly, not archived in-tree).
 
 ### 4. Marker Categories & Filtering
 - Each marker can be tagged with a category (category list should be easy to extend). **Finalized 2026-09-17**: Herb, Ore, Quest, Danger, Trash Mob (raid/dungeon filler mobs between bosses), Heal, Food, Cooking, Home, Marker (general-purpose, no specific use) — final icon art in `Media/Icons/`, mapped in `Modules/Markers.lua`'s `TB.ICON_TYPES`. Replaces the original placeholder set (Herb, Ore, Quest, Custom).
@@ -127,7 +127,7 @@ Per-player/global settings:
 - Minimap button: angle/position around minimap ring, coordinate-display toggle state
 - Arrow: screen position (draggable), selected style, color/tint, grayscale toggle state
 - Filter state: which categories are currently shown/hidden (persisted)
-- Auto-share toggle state (on/off, default off)
+- Auto-share toggle state (on/off, default off) — not currently stored; see Feature 3's removal note
 
 ## Distribution
 

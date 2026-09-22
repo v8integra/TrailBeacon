@@ -51,7 +51,6 @@ function TB:CreateMarker(mapID, x, y, iconType)
     }
     table.insert(TB.db.markers, marker)
     TB:RefreshMapPins()
-    TB:BroadcastMarker(marker)
     return marker
 end
 

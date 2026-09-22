@@ -142,21 +142,6 @@ importBtn:SetScript("OnClick", function()
     StaticPopup_Show("TRAILBEACON_IMPORT")
 end)
 
-local autoShareCheck = CreateFrame("CheckButton", "TrailBeaconAutoShareCheck", shareBar, "UICheckButtonTemplate")
-autoShareCheck:SetSize(20, 20)
-autoShareCheck:SetPoint("RIGHT", shareBar, "RIGHT", -8, 0)
-autoShareCheck:SetScript("OnClick", function(self)
-    TB.db.settings.autoShare = self:GetChecked() and true or false
-end)
-
-local autoShareLabel = shareBar:CreateFontString(nil, "OVERLAY", "GameFontHighlightSmall")
-autoShareLabel:SetPoint("RIGHT", autoShareCheck, "LEFT", -4, 0)
-autoShareLabel:SetText("Auto-Share")
-
-TB:OnDBReady(function()
-    autoShareCheck:SetChecked(TB.db.settings.autoShare)
-end)
-
 WorldMapFrame:HookScript("OnHide", function()
     SetManualSelectActive(false)
 end)
