@@ -1,4 +1,4 @@
-## Interface: 120105
+## Interface: 16001
 ## Title: TrailBeacon
 ## Notes: Place, customize, share, and navigate to custom map and minimap markers.
 ## Author: Keith Francis
